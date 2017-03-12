@@ -1,7 +1,8 @@
 # three.js-test
-this is the first file of three.js that is a 3D physics engine
+
 ### 这是three.js的练习作品  ###
-  ***
+this is the first file of three.js that is a 3D physics engine
+***
  * 主要是为了练习scene、camera、render等基础函数
  * 和添加一些基础几何物体
  * 尝试添加了灯光
