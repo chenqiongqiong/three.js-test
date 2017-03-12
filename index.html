@@ -34,7 +34,13 @@
             var cube=new THREE.Mesh(cubeGeometry,cubeMaterial_);
             //cube.receiveShadow=true;
             scene.add(cube);
-
+            
+            var sphereGeometry=new THREE.SphereGeometry(1);
+            var sphereMaterial=new THREE.MeshLamberMaterial({color:"#ffff00"});
+            var sphere=new THREE.Mesh(sphereGeometry,sphereMaterial);
+            scene.add(sphere);
+            
+            
             var spotLight=new THREE.SpotLight(0xff0000);
             spotLight.position.set(0,2.5,1);
             //scene.add(spotLight);
