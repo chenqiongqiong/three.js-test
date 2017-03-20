@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>threejs demo_3</title>
+    <script src="../three.js-master/build/three.min.js"></script>
+    <script src="../jquery/jquery.js"></script>
+    <script src="../../lib/dat.gui-master/build/dat.gui.js"></script>
+    <link rel="stylesheet" href="../../lib/dat.gui-master/build/dat.gui.css">
+
+    <style>
+        body{
+            margin:0;           /*让背景颜色充满窗口，否则会有白边*/
+            overflow: hidden;  /*防止滚动条电的产生*/
+        }
+        canvas{
+
+        }
+    </style>
+
+</head>
+<body>
+
+<script>
+    $(document).ready(function () {
+        //定义控制器
+        var controls=new function () {
+          this.speed=0.02;
+          this.posX=0;
+          this.posY=0;
+          this.posZ=3;
+          this.cube_posX=0;
+          this.cube_posY=0;
+          this.cube_posZ=0;
+          this.camera_posX=0;
+          this.camera_posY=0;
+          this.camera_posZ=2;
+          this.camera_rotation=0;
+        };
+
+        //生成gui并添加参数
+        var gui=new dat.GUI();
+        gui.add(controls,"speed",0,0.5);
+        gui.add(controls,"posX",0,5);
+        gui.add(controls,"posY",0,5);
+        gui.add(controls,"posZ",0,5);
+        gui.add(controls,"cube_posX",-3,3);
+        gui.add(controls,"cube_posY",-3,3);
+        gui.add(controls,"cube_posZ",-3,3);
+        gui.add(controls,"camera_posX",-2,2);
+        gui.add(controls,"camera_posY",-2,2);
+        gui.add(controls,"camera_posZ",-2,2);
+        gui.add(controls,"camera_rotation",-2,2);
+
+        var scene=new THREE.Scene();
+        var camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+
+        var renderer=new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth,window.innerHeight);
+        renderer.setClearColor("#907770");
+        document.body.appendChild(renderer.domElement);
+
+        var cubeGeo=new THREE.CubeGeometry(1,1,1);
+        var cubeMaterial=new THREE.MeshLambertMaterial({color:0xff88aa});
+        var cube=new THREE.Mesh(cubeGeo,cubeMaterial);
+        scene.add(cube);
+
+        var pointLight=new THREE.PointLight(0xffffff);
+        scene.add(pointLight);
+
+        var render=function () {
+          requestAnimationFrame(render);
+          camera.position.set(controls.camera_posX,controls.camera_posY,controls.camera_posZ);
+          camera.rotation.x=controls.camera_rotation;
+          pointLight.position.set(controls.posX,controls.posY,controls.posZ);
+          cube.rotation.x+=controls.speed;
+          cube.rotation.y+=controls.speed*0.5;
+          cube.position.set(controls.cube_posX,controls.cube_posY,controls.cube_posZ);
+          renderer.render(scene,camera);
+        };
+        render();
+
+    });
+</script>
+
+</body>
+</html>
