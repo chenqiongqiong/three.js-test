@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>threejs重力球演示</title>
+    <script src="../three.js-master/build/three.min.js"></script>
+    <script src="../jquery/jquery.js"></script>
+    <script src="../../lib/dat.gui-master/build/dat.gui.min.js"></script>
+    <link rel="stylesheet" href="../../lib/dat.gui-master/build/dat.gui.css">
+
+    <style>
+        body{
+            margin:0;
+            overflow: hidden;
+        }
+    </style>
+
+</head>
+<body>
+<script>
+    $(document).ready(function () {
+        
+        //向场景中添加控制手柄，并定义下落速度和当前位置
+        var controls=new function () {
+          this.gravity=-0.005;
+          this.speedY=0;
+          this.posY=2;
+        };
+        var gui=new dat.GUI();
+        gui.add(controls,"gravity",-0.01,0);
+
+
+        //场景和相机
+        var scene=new THREE.Scene();
+        var camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+        
+        //渲染器
+        var renderer=new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth,window.innerHeight);
+        renderer.setClearColor("#98f0c3");
+        document.body.appendChild(renderer.domElement);
+
+        //生成球体，对光源产生反应
+        var sphereGeometry=new THREE.SphereGeometry(1);
+        var sphereMaterial=new THREE.MeshLambertMaterial({color:"#f0c945"});
+        var sphere=new THREE.Mesh(sphereGeometry,sphereMaterial);
+        sphere.position.y=3;
+        scene.add(sphere);
+        
+        //产生正方体
+        var cubeGeometry=new THREE.CubeGeometry(1,1,1);
+        var cubeMaterial=new THREE.MeshLambertMaterial({color:"#ff005f"});
+        var cube=new THREE.Mesh(cubeGeometry,cubeMaterial);
+        cube.position.y=-4;
+        scene.add(cube);
+
+        //左右各一个光源
+        var spotLight_1=new THREE.SpotLight({color:"#fff"});
+        spotLight_1.position.y=4;
+        spotLight_1.position.x=3;
+        scene.add(spotLight_1);
+        var spotLight_2=new THREE.SpotLight({color:"#fff"});
+        spotLight_2.position.y=4;
+        spotLight_2.position.x=-3;
+        scene.add(spotLight_2);
+
+        
+        //theta变量是为了角度变化
+        var theta=0;
+        var render=function () {
+          requestAnimationFrame(render);
+          controls.speedY+=controls.gravity;
+          controls.posY+=controls.speedY;
+          sphere.position.y=controls.posY;
+          theta+=0.02;
+          camera.rotation.y=theta;
+          //相机旋转
+          camera.position.set(5*Math.sin(theta),0,5*Math.cos(theta));
+          //落地反弹    
+          if(sphere.position.y<=-3){
+            controls.speedY*=-1.03;
+          };
+
+          renderer.render(scene,camera);
+        };
+
+        render();
+
+
+    });
+</script>
+</body>
+</html>
