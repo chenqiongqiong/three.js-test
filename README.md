@@ -9,3 +9,4 @@ this is the first file of three.js that is a 3D physics engine
  * 用三角函数来控制几何体的弹性运动
  * index_(dat.gui).html为控制场景的作用。加入了dat.gui库。
  *index(gravity+camera_rotation).html为重力球和相机旋转。
+ *index(pointlight_attributes).html测试点光源的有效照射距离和密度，同样用dat.gui控制。
