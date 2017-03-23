@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>threejs 005!</title>
+    <script src="../three.js-master/build/three.min.js"></script>
+    <script src="../jquery/jquery.js"></script>
+    <script src="../../lib/dat.gui-master/build/dat.gui.min.js"></script>
+    <link rel="stylesheet" href="../../lib/dat.gui-master/build/dat.gui.css">
+
+    <style>
+        body{
+            margin:0;
+            overflow: hidden;
+        }
+        /*测试节点是否可以在canvas之上显示，结论是可以的*/
+        p{
+            position:absolute;
+            /*top:30px;*/
+            color:#ddd;
+        }
+    </style>
+
+</head>
+<body>
+
+<p>我能被显示出来吗？？？看来是的！</p>
+
+<script>
+    
+    
+    //创建场景和相机
+    var scene=new THREE.Scene();
+//    scene.overrideMaterial=new THREE.MeshLambertMaterial({color:"#ff0"});
+    var camera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+
+    //向场景中加入控制手柄
+    var controls=new function () {
+        //场景的y轴旋转角度
+        this.angle=0;
+        this.camera_posZ=15;
+        //点光源的有效照射距离和密度
+        this.pointlight_distance=10;
+        this.pointlight_intensity=1;
+
+        //增加物体的函数
+      this.addCube=function () {
+          //cube的大小是随机的
+          var cubeSize=Math.ceil(Math.random()*2);
+          var cube_geometry=new THREE.CubeGeometry(cubeSize,cubeSize,cubeSize);
+          var cube_material=new THREE.MeshLambertMaterial({color:Math.random()*0xffffff});
+          var cube=new THREE.Mesh(cube_geometry,cube_material);
+          //cube的位置在空间中的三个轴都是随机的
+          cube.position.set(-6+Math.random()*12,-6+Math.random()*12,-6+Math.random()*12);
+          //cube的三轴旋转角度也是随机的
+          cube.rotation.set(Math.random()*2,Math.random()*2,Math.random()*2);
+          scene.add(cube);
+      }  ;
+    };
+
+    //生成控制器
+    var gui=new dat.GUI();
+    gui.add(controls,"addCube");
+    gui.add(controls,"angle",0,4*Math.PI);
+    gui.add(controls,"camera_posZ",12,20);
+    gui.add(controls,"pointlight_distance",0.1,20);
+    gui.add(controls,"pointlight_intensity",0.1,5);
+
+
+    //渲染器
+    var renderer=new THREE.WebGLRenderer();
+    renderer.setClearColor("#666");
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // 场景初始化时有一个默认的物体
+    var cubeGeometry=new THREE.CubeGeometry(1,1,1);
+    var cubeMaterial=new THREE.MeshLambertMaterial({color:Math.random()*0xffffff});
+    var cube=new THREE.Mesh(cubeGeometry,cubeMaterial);
+    scene.add(cube);
+
+//    var pointLight_1=new THREE.PointLight();
+//    pointLight_1.position.y=3;
+//    pointLight_1.position.z=3;
+//    scene.add(pointLight_1);
+
+    //点光源
+    var pointLight=new THREE.PointLight();
+    pointLight.position.set(0,0,0);
+    scene.add(pointLight);
+
+    //环境光，影响整个场景
+    var ambientLight=new THREE.AmbientLight({color:"#003300"});
+//    scene.add(ambientLight);
+
+    
+    //动画
+    var render=function () {
+      requestAnimationFrame(render);
+      pointLight.distance=controls.pointlight_distance;
+      pointLight.intensity=controls.pointlight_intensity;
+      camera.position.z=controls.camera_posZ;
+      //camera.lookAt(new THREE.Vector3(5*Math.sin(controls.angle),5*Math.cos(controls.angle),0));
+      renderer.render(scene,camera);
+      scene.rotation.y=controls.angle;
+    };
+
+    render();
+
+</script>
+</body>
+</html>
