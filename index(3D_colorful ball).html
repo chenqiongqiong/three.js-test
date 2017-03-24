@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>眼睛怀孕！我喜欢这个！</title>
+    <!--<script src="../three.js-master/build/three.min.js"></script>-->
+    <!--<script src="../jquery/jquery.js"></script>-->
+    <!--<script src="../../lib/dat.gui-master/build/dat.gui.min.js"></script>-->
+
+    <script src="//cdn.bootcss.com/three.js/r83/three.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery/3.2.0/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/dat-gui/0.6.2/dat.gui.min.js"></script>
+
+    <style>
+        body{
+            margin:0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<script>
+    var scene=new THREE.Scene();
+    var camera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+
+    var renderer=new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    renderer.setClearColor("#333");
+    document.body.appendChild(renderer.domElement);
+
+
+    //生成球的算法
+    for(var fi=0;fi<=Math.PI;fi+=Math.PI/10){
+        var count=10-3*Math.abs(Math.PI/2-fi);
+        for(var theta=0;theta<=Math.PI*2;theta+=Math.PI/count){
+            var cubeGeo=new THREE.CubeGeometry(0.4,0.4,0.4);
+            var cubeMaterial=new THREE.MeshLambertMaterial({color:Math.random()*0xffffff});
+            var cube=new THREE.Mesh(cubeGeo,cubeMaterial);
+            cube.position.set(5*Math.sin(fi)*Math.sin(theta),5*Math.sin(fi)*Math.cos(theta),5*Math.cos(fi));
+            scene.add(cube);
+        }
+    }
+
+    var spotLight=new THREE.PointLight({color:"#ff0"});
+    scene.add(spotLight);
+
+    var light=new THREE.PointLight({color:"#f24"});
+    light.position.set(-13,-14,5);
+    scene.add(light);
+
+
+    camera.position.set(0,0,20);
+
+    var n=0;
+    var render=function () {
+        scene.rotation.x+=0.02;
+        scene.rotation.z+=0.01;
+        requestAnimationFrame(render);
+        n+=0.06;
+        var nnn=1+Math.sin(n);
+        scene.scale.z=0.5+0.5*nnn;
+        spotLight.intensity=nnn;
+//        spotLight.distance=-16+15*Math.cos(n);
+        renderer.render(scene,camera);
+    };
+    render();
+
+</script>
+</body>
+</html>
