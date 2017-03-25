@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>threejs 007!</title>
+    <script src="../three.js-master/build/three.min.js"></script>
+    <script src="../jquery/jquery.js"></script>
+    <script src="../../lib/dat.gui-master/build/dat.gui.min.js"></script>
+    <style>
+        body{
+            margin:0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<script>
+    var controls=new function () {
+      this.camera_posX=36;
+      this.camera_posY=36;
+      this.camera_posZ=45;
+    };
+    var gui=new dat.GUI();
+    gui.add(controls,"camera_posX",-100,100);
+    gui.add(controls,"camera_posY",-100,100);
+    gui.add(controls,"camera_posZ",-100,100);
+
+    var scene=new THREE.Scene();
+    var camera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+//    var helper=new THREE.CameraHelper();
+
+    var renderer=new THREE.WebGLRenderer();
+    renderer.setClearColor("#ffa");
+    renderer.shadowMap.enabled=true;
+    renderer.shadowMap.type=THREE.Pcf;
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    var planeGeometry = new THREE.PlaneGeometry(55,34,1,1);
+    var planeMaterial = new THREE.MeshLambertMaterial({color: 0x993322});
+    var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    plane.rotation.x=-Math.PI/2;
+    plane.receiveShadow=true;
+    scene.add(plane);
+
+    var cubeGeo=new THREE.BoxGeometry(4,4,4);
+    var cubeM=new THREE.MeshLambertMaterial({color:"#559"});
+    var cube=new THREE.Mesh(cubeGeo,cubeM);
+    cube.castShadow=true;
+    cube.position.set(2,6,2);
+    scene.add(cube);
+
+    var spotLight=new THREE.SpotLight({color:"#f2f"});
+    spotLight.intensity=1;
+    spotLight.target=cube;
+    spotLight.castShadow=true;
+    spotLight.shadow.camera.near=2;
+    spotLight.shadow.camera.far=200;
+    spotLight.shadow.camera.fov=30;
+    //shadowCameraVisible只有在老版本的threejs库中才支持，新版本已废除。
+    //spotLight.shadowCameraVisible=true;
+    var helper=new THREE.CameraHelper(spotLight.shadow.camera);
+    scene.add(helper);
+    scene.add(spotLight);
+
+    var ambiColor = "#1c1c1c";
+    var ambientLight = new THREE.AmbientLight(ambiColor);
+    scene.add(ambientLight);
+
+    var spotLight0 = new THREE.SpotLight(0xcccccc);
+    spotLight0.position.set(-40, 30, -10);
+    spotLight0.lookAt(plane);
+    scene.add(spotLight0);
+
+
+
+    camera.position.set(36,44,45);
+    camera.lookAt(scene.position);
+    var angle=0;
+    var render=function () {
+      requestAnimationFrame(render);
+      cube.rotation.x+=0.05;
+      angle+=0.05;
+      spotLight.position.set(10*Math.cos(angle),23+3,15*Math.sin(angle));
+      renderer.render(scene,camera);
+    };
+    render();
+
+</script>
+</body>
+</html>
