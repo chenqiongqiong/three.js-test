@@ -11,3 +11,4 @@ this is the first file of three.js that is a 3D physics engine
  * index(gravity+camera_rotation).html为重力球和相机旋转。
  * index(pointlight_attributes).html测试点光源的有效照射距离和密度，同样用dat.gui控制。
  * index(3D_colorful ball).html为3d彩色弹性球。
+ * index(spotlight).html测试聚光灯的属性。
