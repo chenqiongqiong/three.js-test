@@ -12,3 +12,4 @@ this is the first file of three.js that is a 3D physics engine
  * index(pointlight_attributes).html测试点光源的有效照射距离和密度，同样用dat.gui控制。
  * index(3D_colorful ball).html为3d彩色弹性球。
  * index(spotlight).html测试聚光灯的属性。
+ * index(color_add_listener).html向场景添加颜色监听事件，可以控制随时调节光源颜色。
