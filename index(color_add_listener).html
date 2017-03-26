@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>threejs 007_1!</title>
+
+
+    <script src="../three.js-master/three.js"></script>
+    <script src="dat.gui.js"></script>
+
+    <style>
+        body{
+            margin:0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<script>
+
+
+
+    var scene=new THREE.Scene();
+    var camera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+
+
+    var renderer=new THREE.WebGLRenderer();
+    renderer.setClearColor("#ffa");
+    renderer.shadowMapEnabled=true;
+    //renderer.shadowMap.type=THREE.Pcf;
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    var planeGeometry = new THREE.PlaneGeometry(55,34,1,1);
+    var planeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
+    var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    plane.rotation.x=-Math.PI/2;
+    plane.receiveShadow=true;
+    scene.add(plane);
+
+    var cubeColor_="#00ff10";
+    var cubeGeo=new THREE.BoxGeometry(4,4,4);
+    var cubeM=new THREE.MeshLambertMaterial({color:cubeColor_});
+    var cube=new THREE.Mesh(cubeGeo,cubeM);
+    cube.castShadow=true;
+    cube.position.set(2,6,2);
+    scene.add(cube);
+
+    var spotLight=new THREE.SpotLight({color:"#f00"});
+    spotLight.intensity=1.7;
+    spotLight.target=cube;
+    spotLight.castShadow=true;
+    spotLight.shadowCameraNear=2;
+    spotLight.shadowCameraFar=200;
+    spotLight.shadowCameraFov=30;
+    spotLight.shadowCameraVisible=true;
+    scene.add(spotLight);
+
+    var ambiColor = "#990000";
+    var ambientLight = new THREE.AmbientLight(ambiColor);
+    scene.add(ambientLight);
+
+    var spotLight0 = new THREE.SpotLight(0xcccccc);
+    spotLight0.position.set(-40, 30, -10);
+    spotLight0.lookAt(plane);
+    //scene.add(spotLight0);
+
+
+
+    var controls=new function () {
+        this.ambi_Color=cubeColor_;
+    };
+    var gui=new dat.GUI();
+    gui.addColor(controls,'ambi_Color').onChange(function (e) {
+        ambientLight.color=new THREE.Color(e);
+    });
+
+
+    camera.position.set(36,44,45);
+    camera.lookAt(scene.position);
+    var angle=0;
+    var render=function () {
+        requestAnimationFrame(render);
+        cube.rotation.x+=0.05;
+        angle+=0.05;
+        spotLight.position.set(10*Math.cos(angle),23+3,15*Math.sin(angle));
+        renderer.render(scene,camera);
+    };
+    render();
+
+</script>
+</body>
+</html>
