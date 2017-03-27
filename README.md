@@ -13,3 +13,4 @@ this is the first file of three.js that is a 3D physics engine
  * index(3D_colorful ball).html为3d彩色弹性球。
  * index(spotlight).html测试聚光灯的属性。
  * index(color_add_listener).html向场景添加颜色监听事件，可以控制随时调节光源颜色。
+ * index(directinalLight).html为测试平行光属性。
