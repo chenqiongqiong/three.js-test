@@ -41,7 +41,8 @@
     scene.add(cube_1);
     var cube_2=new THREE.Mesh(cubeGeo_1,cubeMaterial_1);
     cube_2.position.set(-2,2,2);
-    //scene.add(cube_2);
+    cube_2.castShadow=true;
+    scene.add(cube_2);
 
 
     var ambiColor="#538682";
@@ -52,7 +53,13 @@
     d_light.target=cube_1;
     d_light.castShadow=true;
     d_light.shadowCameraVisible=true;
-    d_light.position.set(0,26,4);
+    d_light.shadowCameraNear = 2;
+    d_light.shadowCameraFar = 100;
+    d_light.shadowCameraLeft = -30;
+    d_light.shadowCameraRight = 30;
+    d_light.shadowCameraTop = 50;
+    d_light.shadowCameraBottom = -10;
+    d_light.position.set(0,36,4);
     scene.add(d_light);
 
 
@@ -75,14 +82,18 @@
         cube_1.position.z=e;
     });
     gui.addColor(controls,"change_color").onChange(function (e) {
-        ambiLight.color=new THREE.Color(e);
+        d_light.color=new THREE.Color(e);
     });
 
 
     camera.position.set(36,44,45);
     camera.lookAt(scene.position);
+    var angle=0;
     var render=function () {
       requestAnimationFrame(render);
+      angle+=0.04;
+      cube_1.position.set(15*Math.sin(angle),5,15*Math.cos(angle));
+      cube_2.position.set(15*Math.cos(angle),15,15*Math.sin(angle));
       renderer.render(scene,camera);
     };
     render();
